@@ -355,11 +355,10 @@ bool BLEAdvertising::_start(uint16_t interval, uint16_t timeout)
   };
 
   // gap_adv long-live is required by SD v6
-  static ble_gap_adv_data_t gap_adv =
-  {
-      .adv_data      = { .p_data = _data, .len = _count },
-      .scan_rsp_data = { .p_data = Bluefruit.ScanResponse.getData(), .len = Bluefruit.ScanResponse.count() }
-  };
+  static ble_gap_adv_data_t gap_adv;
+  gap_adv.adv_data      = { .p_data = _data, .len = _count };
+  gap_adv.scan_rsp_data = { .p_data = Bluefruit.ScanResponse.getData(), .len = Bluefruit.ScanResponse.count() };
+
   VERIFY_STATUS( sd_ble_gap_adv_set_configure(&_hdl, &gap_adv, &adv_para), false );
   VERIFY_STATUS( sd_ble_gap_tx_power_set(BLE_GAP_TX_POWER_ROLE_ADV, _hdl, Bluefruit.getTxPower() ), false );
   VERIFY_STATUS( sd_ble_gap_adv_start(_hdl, CONN_CFG_PERIPHERAL), false );
